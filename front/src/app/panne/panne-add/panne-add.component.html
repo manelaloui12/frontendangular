@@ -1,0 +1,156 @@
+<!-- Stepper Component -->
+<div id="hs-stepper-to-destroy" class="max-w-2xl mx-auto mt-8 p-6 bg-white shadow-lg rounded-xl">
+
+  <!-- Stepper Navigation -->
+  <ul class="relative flex flex-row gap-x-4 justify-center">
+    <li class="flex items-center gap-x-2 shrink basis-0 flex-1 group" *ngFor="let step of [1, 2, 3]; let i = index">
+      <div class="w-full h-1 bg-gray-200 group-last:hidden transition-all duration-300"
+        [class.bg-blue-500]="isStepSuccess(step) || isStepCompleted(step)">
+      </div>
+    </li>
+  </ul>
+  <!-- End Stepper Navigation -->
+
+  <!-- Alert Messages -->
+  <div *ngIf="showError" class="mt-4 p-4 text-sm text-red-800 rounded-lg bg-red-100" role="alert">
+    <span class="font-medium">Erreur:</span> {{msg}}.
+  </div>
+  <div *ngIf="show" class="mt-4 p-4 text-sm text-green-800 rounded-lg bg-green-100" role="alert">
+    <span class="font-medium">Succès:</span> {{msg}}
+  </div>
+  <!-- End Alert Messages -->
+
+  <!-- Stepper Content -->
+  <div class="mt-6 p-6 bg-gray-50 rounded-lg shadow-sm">
+    <form [formGroup]="panneForm">
+
+      <!-- Step 1: Personal Info -->
+      <div *ngIf="currentStep === 1" formGroupName="Panneinfo">
+        <h2 class="text-lg font-semibold text-gray-700 mb-4">Information du panne</h2>
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-800">Titre</label>
+          <input type="text" formControlName="title"
+            class="w-full p-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500">
+        </div>
+
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-800">Type de panne</label>
+          <input type="text" formControlName="breakdown_type"
+            class="w-full p-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500">
+        </div>
+      </div>
+      <!-- End Step 1 -->
+
+      <!-- Step 2: Account Info -->
+      <div *ngIf="currentStep === 2" formGroupName="PanneInfo">
+        <h2 class="text-lg font-semibold text-gray-700 mb-4">Informations de panne</h2>
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-800">Date signalement</label>
+          <input type="date" formControlName="date_signalement"
+            class="w-full p-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500">
+        </div>
+        <div>
+          <input type="file" (change)="onFileSelected($event)" accept="image/*" class="w-full p-2 border rounded-lg">
+          <img *ngIf="imageUrl" [src]="imageUrl" alt="Image breakdown" class="w-32 h-32 object-cover rounded-lg shadow-md" />
+        </div>
+        
+        <!-- <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-800">Image de panne</label>
+          <input type="file" (change)="onFileSelected($event)"
+            class="w-full p-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500">
+          <img [src]="imageUrl" *ngIf="imageUrl" alt="Selected Image" />
+        </div> -->
+      </div>
+
+      <!-- End Step 2 -->
+
+      <!-- Step 3: AdresseInfo -->
+      <div *ngIf="currentStep === 3" formGroupName="AdresseInfo">
+        <!-- <h2 class="text-lg font-semibold text-gray-700 mb-4">Adresse</h2>
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-800">Adresse</label>
+          <input type="text" formControlName="adresse"
+            class="w-full p-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500">
+        </div> -->
+        <label for="Adreese" class="block text-sm font-medium text-gray-700 dark:text-gray-300">adresse</label>
+          
+        <!-- Carte Google Maps avec détection de clic -->
+        <google-map
+          width="100%"
+          height="500px"
+          [center]="center"
+          [zoom]="8"
+          (mapClick)="onMapClick($event)">
+          <map-marker [position]="center"></map-marker>
+        </google-map>
+        
+        <input id="adresse" formControlName="adresse" type="text" readonly />
+        
+        <!-- <small *ngIf="claimForm.get('panne.adresse')?.invalid && claimForm.get('panne.adresse')?.touched"
+               class="text-red-500">adresse est requise.</small> -->
+      <!-- </div> -->
+
+        <!-- <div>
+          <label for="Adreese" class="block text-sm font-medium text-gray-700 dark:text-gray-300">adresse</label>
+          
+          <google-map
+            width="100%"
+            height="500px"
+            [center]="center"
+            [zoom]="8"
+            (mapClick)="onMapClick($event)">
+            <map-marker [position]="center"></map-marker>
+          </google-map>
+          
+          <input id="adresse" formControlName="adresse" type="text" readonly />
+          
+          <small *ngIf="claimForm.get('panne.adresse')?.invalid && claimForm.get('panne.adresse')?.touched"
+                 class="text-red-500">adresse est requise.</small>
+        </div> -->
+
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-800">Ville</label>
+          <input type="text" formControlName="ville"
+            class="w-full p-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500">
+        </div>
+
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-gray-800">Position</label>
+          <input type="text" formControlName="position"
+            class="w-full p-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500">
+        </div>
+      </div>
+      <!-- End Step 3 -->
+
+      <!-- Navigation Buttons -->
+      <div class="mt-6 flex justify-between">
+        <button type="button"
+          class="py-2 px-5 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 transition-all duration-200"
+          [disabled]="currentStep === 1" (click)="goToPreviousStep()">
+          ⬅ Précédent
+        </button>
+
+        <button *ngIf="!show" type="submit"
+
+        [disabled]="(panneForm.get('Panneinfo')?.invalid ?? false && currentStep==1) || 
+        (panneForm.get('PanneInfo')?.invalid ?? false && currentStep==2) || 
+        (panneForm.get('AdresseInfo')?.invalid ?? false && currentStep==3)"
+      
+        class="py-2 px-5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all duration-200"
+        (click)="currentStep === 3 ? onSubmit() : goToNextStep()">
+        {{ currentStep === 3 ? '✅ Enregistrer' : 'Suivant ➡' }}
+        </button> 
+      
+        <button *ngIf="show" (click)="back()" type="button"
+          class="py-2 px-5 text-gray-800 border border-gray-400 rounded-lg hover:bg-gray-200 transition-all duration-200">
+          🔄 Retour
+        </button>
+      </div>
+      <!-- End Navigation Buttons -->
+
+    </form>
+  </div>
+  <!-- End Stepper Content -->
+
+</div>
+<!-- End Stepper Component -->

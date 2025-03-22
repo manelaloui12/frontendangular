@@ -1,0 +1,91 @@
+<div id="hs-stepper-to-destroy" data-hs-stepper="">
+  <!-- Stepper Content -->
+  <div class="mt-5 sm:mt-8 p-6 bg-white dark:bg-gray-800 shadow-lg rounded-xl">
+    <div *ngIf="showError" class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
+      <span class="font-medium">Alerte danger!</span> {{msg}}.
+    </div>
+    <div *ngIf="show" class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
+      <span class="font-medium">Alerte de réussite!</span> {{msg}}
+    </div>
+
+    <form [formGroup]="panneForm">
+      <!-- Step 1: Personal Info -->
+      <div *ngIf="currentStep === 1" formGroupName="Panneinfo">
+        <div class="p-4 rounded-xl bg-gray-50">
+          <h2 class="text-xl font-semibold text-gray-900 mb-6">Informations des pannes</h2>
+          
+          <div class="mb-6">
+            <label for="title" class="block text-sm font-medium text-gray-700">Titre:</label>
+            <input id="title" type="text" formControlName="title"
+              class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
+          </div>
+
+          <div class="mb-6">
+            <label for="breakdown_type" class="block text-sm font-medium text-gray-700">type de panne:</label>
+            <input id="breakdown_type" type="text" formControlName="breakdown_type"
+              class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
+          </div>
+          </div>
+        </div>
+          <div *ngIf="currentStep === 2" formGroupName="PanneInfo">
+          
+            <div class="p-4 rounded-xl bg-gray-50">
+              <h2 class="text-xl font-semibold text-gray-900 mb-6">Informations des pannes</h2>
+              
+            
+            <div class="mb-6">
+              <label for="date_signalement" class="block text-sm font-medium text-gray-700">Date Signalement:</label>
+              <input id="date_signalement" type="text" formControlName="date_signalement"
+                class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
+            </div>
+            </div>
+          </div>
+          <div *ngIf="currentStep === 3" formGroupName="AdresseInfo">
+          
+            <div class="p-4 rounded-xl bg-gray-50">
+              <h2 class="text-xl font-semibold text-gray-900 mb-6">Informations des pannes</h2>
+              
+            
+            <div class="mb-6">
+              <label for="adresse" class="block text-sm font-medium text-gray-700">adresse:</label>
+              <input id="adresse" type="text" formControlName="adresse"
+                class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
+            </div>
+            <div class="mb-6">
+              <label for="ville" class="block text-sm font-medium text-gray-700">ville:</label>
+              <input id="ville" type="text" formControlName="ville"
+                class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
+            </div>
+            <div class="mb-6">
+              <label for="position" class="block text-sm font-medium text-gray-700">position:</label>
+              <input id="position" type="text" formControlName="position"
+                class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
+            </div>
+
+
+
+
+            </div>
+          </div>
+      <!-- End Step 1 -->
+      <div class="mt-6 flex justify-between">
+        <button type="button"
+          class="py-2 px-6 bg-gray-200 rounded-lg hover:bg-gray-300 transition-all"
+          [disabled]="currentStep === 1" (click)="goToPreviousStep()">
+          Précédent
+        </button>
+
+        <button *ngIf="!show" type="button"  [disabled]="panneForm.get('Panneinfo')?.invalid && currentStep==1  || panneForm.get('PanneInfo')?.invalid  && currentStep==2|| panneForm.get('AdresseInfo')?.invalid && currentStep==3"
+          class="py-3 px-6 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none transition-all"
+          (click)="currentStep === 3 ? onSubmit() : goToNextStep()">
+          {{ currentStep === 3 ? 'Enregistrer' : 'Suivant' }}
+        </button>
+        <button *ngIf="show" (click)="back()" type="button" class="py-3.5 px-6 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Retour</button>
+      </div>
+      <!-- End Navigation Buttons -->
+
+    </form>
+  </div>
+  <!-- End Stepper Content -->
+</div>
+<!-- End Stepper Component -->

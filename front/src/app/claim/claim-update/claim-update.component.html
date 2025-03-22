@@ -1,0 +1,68 @@
+<div id="hs-stepper-to-destroy" data-hs-stepper="">
+    <!-- Stepper Content -->
+    <div class="mt-5 sm:mt-8 p-6 bg-white dark:bg-gray-800 shadow-lg rounded-xl">
+      <div *ngIf="showError" class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
+        <span class="font-medium">Alerte danger!</span> {{msg}}.
+      </div>
+      <div *ngIf="show" class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
+        <span class="font-medium">Alerte de réussite!</span> {{msg}}
+      </div>
+      <form [formGroup]="claimForm">
+  
+        <!-- Step 1: Personal Info -->
+        <div *ngIf="currentStep === 1" formGroupName="claimInfo">
+          <div class="p-4 rounded-xl bg-gray-50">
+            <h2 class="text-xl font-semibold text-gray-900 mb-6">Informations de reclamation</h2>
+            
+            <div class="mb-6">
+              <label for="claimname" class="block text-sm font-medium text-gray-700">Nom:</label>
+              <input id="claimname" type="text" formControlName="claimname"
+                class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
+            </div>
+  
+            <div class="mb-6">
+              <label for="date_claim" class="block text-sm font-medium text-gray-700">Date:</label>
+              <input id="date_claim" type="text" formControlName="date_claim"
+                class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
+            </div>
+   
+            <!-- <div class="mb-6">
+              <label for="type_panne" class="block text-sm font-medium text-gray-700">type:</label>
+              <input id="type_panne" type="type_panne" formControlName="type_panne"
+                class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
+            </div> -->
+  
+            <div class="mb-6">
+              <label for="localisation" class="block text-sm font-medium text-gray-700">localisation:</label>
+              <input id="localisation" type="text" formControlName="localisation"
+                class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
+            </div>
+
+          </div>
+        </div>
+        
+  
+        <!-- Navigation Buttons -->
+        <div class="mt-6 flex justify-between">
+          <button type="button"
+            class="py-2 px-6 bg-gray-200 rounded-lg hover:bg-gray-300 transition-all"
+            [disabled]="currentStep === 1" (click)="goToPreviousStep()">
+            Précédent
+          </button>
+  
+          <button *ngIf="!show" type="button" [disabled]="claimForm.get('claimInfo')?.invalid && currentStep==1"
+          
+            class="py-2 px-6 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none transition-all"
+            (click)="currentStep === 1 ? onSubmit() : goToNextStep()">
+            {{ currentStep === 1 ? 'Enregistrer' : 'Suivant' }}
+          </button>
+          <button *ngIf="show" (click)="back()" type="button" class="py-2.5 px-6 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Retour</button>
+        </div>
+        <!-- End Navigation Buttons -->
+  
+      </form>
+    </div>
+    <!-- End Stepper Content -->
+  </div>
+  <!-- End Stepper Component -->
+  

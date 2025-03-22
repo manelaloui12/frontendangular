@@ -1,0 +1,88 @@
+<div id="hs-stepper-to-destroy" data-hs-stepper="">
+  <!-- Stepper Content -->
+  <div class="mt-5 sm:mt-8 p-6 bg-white dark:bg-gray-800 shadow-lg rounded-xl">
+    <div *ngIf="showError" class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
+      <span class="font-medium">Alerte danger!</span> {{msg}}.
+    </div>
+    <div *ngIf="show" class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
+      <span class="font-medium">Alerte de réussite!</span> {{msg}}
+    </div>
+    <form [formGroup]="userForm">
+
+      <!-- Step 1: Personal Info -->
+      <div *ngIf="currentStep === 1" formGroupName="personalInfo">
+        <div class="p-4 rounded-xl bg-gray-50">
+          <h2 class="text-xl font-semibold text-gray-900 mb-6">Informations Personnelles</h2>
+          
+          <div class="mb-6">
+            <label for="first_name" class="block text-sm font-medium text-gray-700">Nom:</label>
+            <input id="first_name" type="text" formControlName="first_name"
+              class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
+          </div>
+
+          <div class="mb-6">
+            <label for="last_name" class="block text-sm font-medium text-gray-700">Prénom:</label>
+            <input id="last_name" type="text" formControlName="last_name"
+              class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
+          </div>
+
+          <div class="mb-6">
+            <label for="role" class="block text-sm font-medium text-gray-700">Rôle:</label>
+            <input id="role" type="text" formControlName="role"
+              class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
+          </div>
+        </div>
+      </div>
+      <!-- End Step 1 -->
+
+      <!-- Step 2: Account Info -->
+      <div *ngIf="currentStep === 2" formGroupName="emailcontact">
+        <div class="p-4 rounded-xl bg-gray-50">
+          <h2 class="text-xl font-semibold text-gray-900 mb-6">Informations de Connexion</h2>
+
+          <div class="mb-6">
+            <label for="email" class="block text-sm font-medium text-gray-700">Email:</label>
+            <input id="email" type="email" formControlName="email"
+              class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
+          </div>
+
+        </div>
+      </div>
+      <!-- End Step 2 -->
+
+      <!-- Step 3: Address -->
+      <div *ngIf="currentStep === 3" formGroupName="address">
+        <div class="p-4 rounded-xl bg-gray-50">
+          <h2 class="text-xl font-semibold text-gray-900 mb-6">Adresse</h2>
+
+          <div class="mb-6">
+            <label for="phone_number" class="block text-sm font-medium text-gray-700">Numéro de téléphone:</label>
+            <input id="phone_number" type="text" formControlName="phone_number"
+              class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
+          </div>
+        </div>
+      </div>
+      <!-- End Step 3 -->
+
+      <!-- Navigation Buttons -->
+      <div class="mt-6 flex justify-between">
+        <button type="button"
+          class="py-2 px-6 bg-gray-200 rounded-lg hover:bg-gray-300 transition-all"
+          [disabled]="currentStep === 1" (click)="goToPreviousStep()">
+          Précédent
+        </button>
+
+        <button *ngIf="!show" type="button"  [disabled]="userForm.get('personalInfo')?.invalid && currentStep==1  || userForm.get('emailcontact')?.invalid  && currentStep==2|| userForm.get('address')?.invalid && currentStep==3"
+          class="py-2 px-6 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none transition-all"
+          (click)="currentStep === 3 ? onSubmit() : goToNextStep()">
+          {{ currentStep === 3 ? 'Enregistrer' : 'Suivant' }}
+        </button>
+        <button *ngIf="show" (click)="back()" type="button" class="py-2.5 px-6 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">Retour</button>
+      </div>
+      <!-- End Navigation Buttons -->
+
+    </form>
+  </div>
+  <!-- End Stepper Content -->
+</div>
+<!-- End Stepper Component -->

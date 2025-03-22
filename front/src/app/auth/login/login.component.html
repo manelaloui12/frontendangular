@@ -1,0 +1,65 @@
+<section class="bg-gray-50 dark:bg-gray-900 min-h-screen flex items-center justify-center">
+    <div class="w-full max-w-md bg-white rounded-lg shadow-md dark:bg-gray-800 dark:border dark:border-gray-700 p-8">
+        <div class="flex flex-col items-center mb-6">
+            <a href="#" class="flex items-center justify-center text-2xl font-semibold text-gray-900 dark:text-white">
+                <img src="assets/telechargement.png" class="w-[25%]">
+            </a>
+        </div>
+        
+        <h1 class="text-xl font-bold text-gray-900 dark:text-white text-center mb-6">
+            Connectez-vous à votre compte
+        </h1>
+
+        <form [formGroup]="authForm" (ngSubmit)="login()" class="space-y-4">
+            <!-- Champ Email -->
+            <div>
+                <label for="email" class="block text-sm font-medium text-gray-900 dark:text-white">Votre e-mail</label>
+                <input type="email" formControlName="email" name="email" id="email"
+                    class="mt-1 block w-full px-4 py-2 border rounded-lg text-gray-900 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 
+                    dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                    placeholder="nom@entreprise.com" required>
+            </div>
+
+            <!-- Champ Mot de passe avec bouton afficher/masquer -->
+            <div>
+                <label for="password" class="block text-sm font-medium text-gray-900 dark:text-white">Mot de passe</label>
+                <div class="relative">
+                    <input [type]="showPassword ? 'text' : 'password'" formControlName="password" name="password" id="password"
+                        class="mt-1 block w-full px-4 py-2 border rounded-lg text-gray-900 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 
+                        dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                        placeholder="••••••••" required>
+                    <button type="button" (click)="togglePasswordVisibility()" class="absolute inset-y-0 right-0 flex items-center pr-3">
+                        <svg *ngIf="!showPassword" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M10 3a7 7 0 00-7 7 7 7 0 0014 0 7 7 0 00-7-7zm0 12a5 5 0 110-10 5 5 0 010 10zm-1-4.5a1 1 0 102 0V7a1 1 0 10-2 0v3.5z" />
+                        </svg>
+                        <svg *ngIf="showPassword" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M4.707 3.293A1 1 0 013.293 4.707l12 12a1 1 0 001.414-1.414l-12-12zM10 4a6 6 0 00-6 6c0 .697.151 1.36.42 1.967l1.473-1.473A3 3 0 1113.04 9.7l1.471-1.471A6 6 0 0010 4zm-6 6a6 6 0 0112 0 6 6 0 01-12 0z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Checkbox Se souvenir de moi + Lien mot de passe oublié -->
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <input id="remember" type="checkbox"
+                        class="w-4 h-4 border-gray-300 rounded bg-gray-50 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600">
+                    <label for="remember" class="ml-2 text-sm text-gray-500 dark:text-gray-300">Se souvenir de moi</label>
+                </div>
+                <a href="#" class="text-sm text-blue-600 hover:underline dark:text-blue-400">Mot de passe oublié ?</a>
+            </div>
+
+            <!-- Bouton de connexion -->
+            <button type="submit"
+                class="w-full bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 transition">
+                Se connecter
+            </button>
+
+            <!-- Lien d'inscription -->
+            <p class="text-sm text-center text-gray-500 dark:text-gray-400 mt-4">
+                Vous n'avez pas encore de compte ?
+                <a href="#" class="text-blue-600 hover:underline dark:text-blue-400">Inscrivez-vous</a>
+            </p>
+        </form>
+    </div>
+</section>

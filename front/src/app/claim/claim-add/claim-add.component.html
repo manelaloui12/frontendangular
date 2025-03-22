@@ -1,0 +1,113 @@
+<div class="max-w-2xl mx-auto bg-white dark:bg-gray-800 shadow-lg rounded-xl p-6">
+  <!-- Form Container -->
+  <form [formGroup]="claimForm" (ngSubmit)="onSubmit()" class="space-y-6">
+    <!-- Step 1: Claim Information -->
+    <div *ngIf="currentStep === 1">
+      <h2 class="text-xl font-semibold text-gray-800 dark:text-white">Informations de réclamation</h2>
+      <div formGroupName="claimInfo" class="grid grid-cols-1 gap-4">
+        <div>
+          <label for="claimname" class="block text-sm font-medium text-gray-700 dark:text-gray-300">nom de réclamation</label>
+          <input id="claimname" formControlName="claimname" type="text" class="mt-1 block w-full p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="Enter claim name" />
+          <small *ngIf="claimForm.get('claimInfo.claimname')?.invalid && claimForm.get('claimInfo.claimname')?.touched" class="text-red-500">
+            Claim name is required and must be at least 2 characters long.
+          </small>
+        </div>
+        <div>
+          <label for="date_claim" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Date</label>
+          <input id="date_claim" formControlName="date_claim" type="date" class="mt-1 block w-full p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
+          <small *ngIf="claimForm.get('claimInfo.date_claim')?.invalid && claimForm.get('claimInfo.date_claim')?.touched" class="text-red-500">
+            Claim date is required.
+          </small>
+        </div>
+        <div>
+          <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Description</label>
+          <textarea id="description" formControlName="description" class="mt-1 block w-full p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="Describe the issue"></textarea>
+          <small *ngIf="claimForm.get('claimInfo.description')?.invalid && claimForm.get('claimInfo.description')?.touched" class="text-red-500">
+            Description is required.
+          </small>
+        </div>
+        <div>
+          <label for="localisation" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Localisation</label>
+          <!-- Carte Google Maps avec détection de clic -->
+          <google-map width="100%" height="500px" [center]="center" [zoom]="8" (mapClick)="onMapClick($event)">
+            <map-marker [position]="center"></map-marker>
+          </google-map>
+          <input id="localisation" formControlName="localisation" type="text" readonly />
+          <small *ngIf="claimForm.get('claimInfo.localisation')?.invalid && claimForm.get('claimInfo.localisation')?.touched" class="text-red-500">
+            Localisation est requise.
+          </small>
+        </div>
+        <div>
+          <label for="client" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Client</label>
+          <select id="client" formControlName="id_client" class="mt-1 block w-full p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+            <option *ngFor="let client of clients" [value]="client.id_client">
+              {{ client.clientname }}
+            </option>
+          </select>
+          <small *ngIf="claimForm.get('claimInfo.id_client')?.invalid && claimForm.get('claimInfo.id_client')?.touched" class="text-red-500">
+            Veuillez sélectionner un client.
+          </small>
+        </div>
+        <div>
+          <label for="panne" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Type de Panne</label>
+          <select id="panne" formControlName="id_breakdown" class="mt-1 block w-full p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+            <option *ngFor="let panne of pannes" [value]="panne.id_breakdown">
+              {{ panne.title }}
+            </option>
+          </select>
+          <small *ngIf="claimForm.get('claimInfo.id_breakdown')?.invalid && claimForm.get('claimInfo.id_breakdown')?.touched" class="text-red-500">
+            Veuillez sélectionner une panne.
+          </small>
+        </div>
+        <div>
+          <label for="etat" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Statut</label>
+          <input id="etat" formControlName="etat" type="text" class="mt-1 block w-full p-2 border rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white" placeholder="Enter status" />
+          <small *ngIf="claimForm.get('claimInfo.etat')?.invalid && claimForm.get('claimInfo.etat')?.touched" class="text-red-500">
+            Le statut est requis.
+          </small>
+        </div>
+        <!-- Section pour télécharger plusieurs images -->
+        <div *ngIf="currentStep === 1">
+          <label for="images" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            Télécharger des images
+          </label>
+          <input id="images" type="file" multiple (change)="onFilesSelected($event)" class="block w-full mt-1" />
+          <div class="mt-2 flex flex-wrap gap-2">
+            <div *ngFor="let url of imageUrls">
+              <img [src]="url" alt="Aperçu de l'image" class="w-32 h-32 object-cover rounded-lg shadow-md" />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="mt-6 flex justify-end space-x-4">
+        <button type="button" (click)="goToNextStep()" [disabled]="claimForm.invalid" class="px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-2 focus:ring-blue-300">
+          Next
+        </button>
+      </div>
+    </div>
+    <!-- Step 2: File Preview (si besoin d'un aperçu supplémentaire) -->
+    <div *ngIf="currentStep === 2">
+      <h2 class="text-xl font-semibold text-gray-800 dark:text-white">Aperçu du fichier</h2>
+      <div *ngIf="imageUrl" class="mt-4 flex justify-center">
+        <img [src]="imageUrl" alt="Selected image preview" class="w-48 h-48 object-cover rounded-lg shadow-lg" />
+      </div>
+      <div class="mt-6 flex justify-between">
+        <button type="button" (click)="goToPreviousStep()" class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300">Back</button>
+        <button type="button" (click)="goToNextStep()" class="px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700">Next</button>
+      </div>
+    </div>
+    <!-- Step 3: Review & Submit -->
+    <div *ngIf="currentStep === 3">
+      <h2 class="text-xl font-semibold text-gray-800 dark:text-white">Réviser et soumettre</h2>
+      <div class="mt-4 space-y-2 text-gray-700 dark:text-gray-300">
+        <p><strong>nom du reclamation:</strong> {{ claimForm.value.claimInfo.claimname }}</p>
+        <p><strong>Description:</strong> {{ claimForm.value.claimInfo.description }}</p>
+        <p><strong>Localisation:</strong> {{ claimForm.value.claimInfo.localisation }}</p>
+      </div>
+      <div class="mt-6 flex justify-between">
+        <button type="button" (click)="goToPreviousStep()" class="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300">revenir</button>
+        <button type="submit" [disabled]="isSubmitting" class="px-4 py-2 text-white bg-green-600 rounded-lg hover:bg-green-700">soumettre</button>
+      </div>
+    </div>
+  </form>
+</div>
